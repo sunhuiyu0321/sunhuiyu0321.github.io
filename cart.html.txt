@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>购物车 - 智能云AI电商在线销售系统</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="brand">
+      <span class="logo">☁️</span>
+      <span>智能云AI电商<small>在线销售系统</small></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="cart.html" class="active">🛒 购物车
+        <span class="cart-badge" id="cart-badge" style="display:none">0</span>
+      </a>
+    </div>
+    <div class="nav-user" id="nav-user"></div>
+  </nav>
+
+  <main class="container">
+    <h2 class="section-title">我的购物车 <small id="cart-count-tip"></small></h2>
+    <div id="cart-content"><!-- JS 渲染 --></div>
+  </main>
+
+  <footer class="footer">
+    © 2025 智能云AI电商在线销售系统 · 课程期中作业演示项目 · 静态站点
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    function renderCart() {
+      const wrap = document.getElementById('cart-content');
+      const cart = getCart();
+      const tip = document.getElementById('cart-count-tip');
+      if (cart.length === 0) {
+        tip.textContent = '';
+        wrap.innerHTML = `
+          <div class="cart-empty">
+            <p style="font-size:48px;margin-bottom:12px">🛒</p>
+            <p>购物车还是空的，去 <a href="index.html">首页</a> 挑选心仪好物吧～</p>
+          </div>`;
+        return;
+      }
+      tip.textContent = `（${cartCount()} 件商品）`;
+      const rows = cart.map(i => {
+        const p = getProduct(i.id);
+        if (!p) return '';
+        return `
+          <div class="cart-item">
+            <img src="${p.image}" alt="${p.name}" />
+            <div class="info">
+              <div class="name">${p.name}</div>
+              <div class="price">¥${p.price}</div>
+            </div>
+            <div class="qty">
+              <button onclick="changeQty(${p.id}, -1)">−</button>
+              <span>${i.qty}</span>
+              <button onclick="changeQty(${p.id}, 1)">+</button>
+            </div>
+            <div class="price" style="font-weight:800">¥${p.price * i.qty}</div>
+            <button class="btn-remove" onclick="removeFromCart(${p.id})">删除</button>
+          </div>`;
+      }).join('');
+
+      wrap.innerHTML = `
+        <div class="cart-list">${rows}</div>
+        <div class="summary">
+          <div class="total">合计：<b>${cartTotal()}</b></div>
+          <button class="btn-checkout" onclick="checkout()">结算下单</button>
+        </div>`;
+    }
+
+    function checkout() {
+      if (cartCount() === 0) return;
+      const total = cartTotal();
+      localStorage.removeItem('zny_cart');
+      renderCart();
+      updateCartBadge();
+      const wrap = document.getElementById('cart-content');
+      wrap.innerHTML = `
+        <div class="cart-empty">
+          <p style="font-size:48px;margin-bottom:12px">✅</p>
+          <p><b>下单成功！</b>本次订单金额 ¥${total}</p>
+          <p style="margin-top:8px"><a href="index.html">继续购物</a></p>
+        </div>`;
+      toast('结算成功，感谢惠顾！');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderAuthNav();
+      updateCartBadge();
+      renderCart();
+    });
+  </script>
+</body>
+</html>

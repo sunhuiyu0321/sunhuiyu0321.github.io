@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>登录 - 智能云AI电商在线销售系统</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="brand">
+      <span class="logo">☁️</span>
+      <span>智能云AI电商<small>在线销售系统</small></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="cart.html">🛒 购物车</a>
+    </div>
+    <div class="nav-user" id="nav-user"></div>
+  </nav>
+
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h2>欢迎登录</h2>
+      <p class="sub">智能云AI电商 · 账号登录</p>
+
+      <div class="demo-tip">演示账号：用户名 <b>demo</b> / 密码 <b>123456</b>（也可先注册新账号）</div>
+      <div class="alert error" id="alert"></div>
+
+      <form id="login-form" onsubmit="return submitLogin(event)">
+        <div class="field">
+          <label for="username">用户名</label>
+          <input type="text" id="username" placeholder="请输入用户名" autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="password">密码</label>
+          <input type="password" id="password" placeholder="请输入密码" autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn-submit">登 录</button>
+      </form>
+      <div class="form-foot">还没有账号？<a href="register.html">立即注册</a></div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', renderAuthNav);
+
+    function submitLogin(e) {
+      e.preventDefault();
+      const alert = document.getElementById('alert');
+      alert.className = 'alert';
+      const res = login(
+        document.getElementById('username').value,
+        document.getElementById('password').value
+      );
+      if (res.ok) {
+        alert.className = 'alert success';
+        alert.textContent = res.msg + '，正在跳转…';
+        setTimeout(() => location.href = 'index.html', 600);
+      } else {
+        alert.className = 'alert error';
+        alert.textContent = res.msg;
+      }
+      return false;
+    }
+  </script>
+</body>
+</html>

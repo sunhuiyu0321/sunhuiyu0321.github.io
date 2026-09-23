@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>注册 - 智能云AI电商在线销售系统</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="brand">
+      <span class="logo">☁️</span>
+      <span>智能云AI电商<small>在线销售系统</small></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="cart.html">🛒 购物车</a>
+    </div>
+    <div class="nav-user" id="nav-user"></div>
+  </nav>
+
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h2>创建账号</h2>
+      <p class="sub">加入智能云AI电商 · 开启智慧购物</p>
+
+      <div class="alert error" id="alert"></div>
+      <div class="alert success" id="ok"></div>
+
+      <form id="register-form" onsubmit="return submitRegister(event)">
+        <div class="field">
+          <label for="username">用户名</label>
+          <input type="text" id="username" placeholder="至少 3 个字符" autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="email">邮箱（选填）</label>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="password">密码</label>
+          <input type="password" id="password" placeholder="至少 6 位" autocomplete="new-password" />
+        </div>
+        <div class="field">
+          <label for="confirm">确认密码</label>
+          <input type="password" id="confirm" placeholder="再次输入密码" autocomplete="new-password" />
+        </div>
+        <button type="submit" class="btn-submit">注 册</button>
+      </form>
+      <div class="form-foot">已有账号？<a href="login.html">去登录</a></div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', renderAuthNav);
+
+    function submitRegister(e) {
+      e.preventDefault();
+      const alert = document.getElementById('alert');
+      const ok = document.getElementById('ok');
+      alert.className = 'alert'; ok.className = 'alert';
+
+      const pwd = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm').value;
+      if (pwd !== confirm) {
+        alert.className = 'alert error';
+        alert.textContent = '两次输入的密码不一致';
+        return false;
+      }
+      const res = register(
+        document.getElementById('username').value,
+        pwd,
+        document.getElementById('email').value
+      );
+      if (res.ok) {
+        ok.className = 'alert success';
+        ok.textContent = res.msg + '，正在跳转登录…';
+        setTimeout(() => location.href = 'login.html', 900);
+      } else {
+        alert.className = 'alert error';
+        alert.textContent = res.msg;
+      }
+      return false;
+    }
+  </script>
+</body>
+</html>

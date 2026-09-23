@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智能云AI电商在线销售系统</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <a href="index.html" class="brand">
+      <span class="logo">☁️</span>
+      <span>智能云AI电商<small>在线销售系统</small></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="active">首页</a>
+      <a href="cart.html" class="cart-link">🛒 购物车
+        <span class="cart-badge" id="cart-badge" style="display:none">0</span>
+      </a>
+    </div>
+    <div class="nav-user" id="nav-user"><!-- JS 注入 --></div>
+  </nav>
+
+  <!-- 英雄横幅 -->
+  <header class="hero">
+    <div class="container">
+      <span class="tag">🤖 由云端 AI 智能驱动 · 一键无忧购物</span>
+      <h1>智能云 AI 电商在线销售系统</h1>
+      <p>汇聚智能硬件、穿戴设备与智能家居好物，登录即可加入购物车，开启你的 AI 智慧生活。</p>
+    </div>
+  </header>
+
+  <!-- 商品列表 -->
+  <main class="container">
+    <h2 class="section-title">精选商品 <small>共 12 款 · 云端直供</small></h2>
+    <div class="product-grid" id="product-grid"><!-- JS 渲染 --></div>
+  </main>
+
+  <footer class="footer">
+    © 2025 智能云AI电商在线销售系统 · 课程期中作业演示项目 · 静态站点 ·
+    <a href="login.html">登录</a> / <a href="register.html">注册</a>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    // 渲染商品列表
+    function renderProducts() {
+      const grid = document.getElementById('product-grid');
+      grid.innerHTML = PRODUCTS.map(p => `
+        <div class="product-card">
+          <img class="product-img" src="${p.image}" alt="${p.name}" />
+          <div class="product-body">
+            <span class="product-cat">${p.category}</span>
+            <div class="product-name">${p.name}</div>
+            <div class="product-desc">${p.desc}</div>
+            <div class="product-foot">
+              <span class="product-price">${p.price}</span>
+              <button class="btn-add" onclick="handleAdd(${p.id})">加入购物车</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    function handleAdd(id) {
+      addToCart(id);
+      const p = getProduct(id);
+      toast('已加入购物车：' + p.name);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProducts();
+      renderAuthNav();
+      updateCartBadge();
+    });
+  </script>
+</body>
+</html>
