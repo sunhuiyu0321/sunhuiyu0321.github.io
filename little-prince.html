@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《小王子》 · 只有用心才能看得清</title>
+<style>
+  :root{
+    --bg-1:#fdfaf3;
+    --bg-2:#eef4fb;
+    --bg-3:#f6f0fb;
+    --ink:#2f3542;
+    --ink-soft:#5b6472;
+    --gold:#c9a227;
+    --gold-soft:#f2d77c;
+    --blue:#4a6fa5;
+    --card:rgba(255,255,255,.72);
+    --line:rgba(120,130,150,.18);
+    --shadow:0 10px 34px rgba(90,110,150,.10);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:"Georgia","Songti SC","STSong","Noto Serif SC",serif;
+    color:var(--ink);
+    line-height:1.9;
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 600px at 8% -8%, #fff6dd 0%, transparent 55%),
+      radial-gradient(1000px 700px at 100% 0%, #e6f0ff 0%, transparent 55%),
+      radial-gradient(900px 900px at 50% 110%, #f0e6ff 0%, transparent 60%),
+      linear-gradient(160deg,var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+    background-attachment:fixed;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- 顶部星星装饰 ---------- */
+  .stars{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
+  .stars span{
+    position:absolute;border-radius:50%;
+    background:#fff;box-shadow:0 0 8px 2px rgba(255,236,170,.85);
+    animation:twinkle 4s infinite ease-in-out;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:.15;transform:scale(.7);}
+    50%{opacity:.95;transform:scale(1.15);}
+  }
+
+  /* ---------- 布局 ---------- */
+  .wrap{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:56px 22px 80px;}
+
+  /* ---------- 封面 ---------- */
+  .hero{text-align:center;padding:34px 20px 30px;margin-bottom:44px;}
+  .moon{
+    width:96px;height:96px;margin:0 auto 22px;border-radius:50%;
+    background:radial-gradient(circle at 34% 30%,#fff9e3 0%,var(--gold-soft) 55%,#e8c65a 100%);
+    box-shadow:0 0 0 12px rgba(255,238,180,.28),0 0 46px 10px rgba(240,205,90,.42);
+    animation:float 6s ease-in-out infinite;
+  }
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+
+  .hero h1{
+    font-size:clamp(2.3rem,7vw,3.5rem);
+    letter-spacing:.16em;
+    font-weight:600;
+    color:var(--ink);
+    margin-bottom:14px;
+  }
+  .hero .sub{
+    font-size:1rem;letter-spacing:.34em;color:var(--gold);
+    text-transform:uppercase;margin-bottom:10px;
+  }
+  .hero .author{
+    display:inline-block;
+    margin-top:8px;padding:7px 22px;border-radius:999px;
+    font-size:.95rem;letter-spacing:.08em;color:var(--ink-soft);
+    background:var(--card);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(6px);
+  }
+
+  /* ---------- 通用卡片 ---------- */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:34px 32px;
+    margin-bottom:34px;
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(10px);
+    animation:rise .8s ease both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+
+  .sec-title{
+    display:flex;align-items:center;gap:12px;
+    font-size:1.35rem;font-weight:600;letter-spacing:.06em;
+    margin-bottom:22px;color:var(--ink);
+  }
+  .sec-title::before{
+    content:"";width:6px;height:24px;border-radius:3px;
+    background:linear-gradient(180deg,var(--gold-soft),var(--gold));
+    flex:none;
+  }
+
+  /* ---------- 简介 ---------- */
+  .intro p{margin-bottom:15px;color:var(--ink-soft);font-size:1.02rem;text-align:justify;}
+  .intro p:last-child{margin-bottom:0;}
+  .info-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:14px;margin-top:26px;
+  }
+  .info-grid div{
+    background:rgba(255,255,255,.62);
+    border:1px solid var(--line);
+    border-radius:14px;padding:14px 16px;
+  }
+  .info-grid dt{font-size:.78rem;letter-spacing:.16em;color:var(--gold);margin-bottom:4px;}
+  .info-grid dd{font-size:.98rem;color:var(--ink);font-weight:600;}
+
+  /* ---------- 语录 ---------- */
+  .tips{font-size:.88rem;color:var(--ink-soft);margin-bottom:18px;}
+  .tips b{color:var(--gold);}
+
+  .quote{
+    position:relative;
+    padding:20px 24px 20px 54px;
+    margin-bottom:16px;
+    border-radius:16px;
+    border:1px solid transparent;
+    background:rgba(255,255,255,.5);
+    cursor:pointer;
+    transition:background .45s ease, transform .35s ease,
+               box-shadow .45s ease, border-color .45s ease, color .45s ease;
+  }
+  .quote::before{
+    content:"❝";
+    position:absolute;left:18px;top:14px;
+    font-size:1.7rem;color:var(--gold);
+    opacity:.5;transition:opacity .35s ease, transform .35s ease;
+  }
+  .quote p{font-size:1.04rem;color:var(--ink);transition:color .35s ease;}
+  .quote .from{
+    display:block;margin-top:8px;font-size:.82rem;
+    color:var(--ink-soft);letter-spacing:.1em;transition:color .35s ease;
+  }
+
+  /* 交互1：悬停高亮变色 */
+  .quote:hover{
+    background:linear-gradient(100deg,#fff4cf 0%,#fde9a8 48%,#ffe6b8 100%);
+    border-color:rgba(201,162,39,.45);
+    box-shadow:0 12px 30px rgba(201,162,39,.24);
+    transform:translateX(8px);
+  }
+  .quote:hover::before{opacity:1;transform:scale(1.15) rotate(-6deg);}
+  .quote:hover p{color:#7a5b06;}
+  .quote:hover .from{color:#a1832a;}
+
+  /* ---------- 留言板 ---------- */
+  .board-form{display:flex;flex-direction:column;gap:12px;}
+  .board-form textarea{
+    width:100%;min-height:96px;resize:vertical;
+    padding:14px 16px;font-size:.98rem;font-family:inherit;line-height:1.7;
+    color:var(--ink);
+    background:rgba(255,255,255,.78);
+    border:1px solid var(--line);border-radius:14px;
+    outline:none;transition:border-color .3s,box-shadow .3s;
+  }
+  .board-form textarea::placeholder{color:#a8b0bd;}
+  .board-form textarea:focus{
+    border-color:var(--gold);
+    box-shadow:0 0 0 4px rgba(201,162,39,.16);
+  }
+  .form-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;}
+  .counter{font-size:.8rem;color:#a8b0bd;letter-spacing:.06em;}
+  .btn{
+    padding:11px 34px;border:none;border-radius:999px;cursor:pointer;
+    font-family:inherit;font-size:.96rem;font-weight:600;letter-spacing:.12em;
+    color:#fff;
+    background:linear-gradient(120deg,var(--gold) 0%,#e0b93e 60%,#d4a92c 100%);
+    box-shadow:0 8px 20px rgba(201,162,39,.34);
+    transition:transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(201,162,39,.44);filter:brightness(1.05);}
+  .btn:active{transform:translateY(0) scale(.98);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+
+  .board-list{margin-top:26px;display:flex;flex-direction:column;gap:12px;}
+  .board-empty{
+    text-align:center;color:#a8b0bd;font-size:.92rem;
+    padding:26px 10px;border:1px dashed var(--line);border-radius:14px;
+  }
+  .msg{
+    position:relative;
+    background:rgba(255,255,255,.72);
+    border:1px solid var(--line);
+    border-left:4px solid var(--gold-soft);
+    border-radius:12px;
+    padding:13px 16px;
+    animation:pop .45s cubic-bezier(.22,1.2,.36,1) both;
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(-10px) scale(.97);}to{opacity:1;transform:none;}}
+  .msg .txt{font-size:.98rem;color:var(--ink);word-break:break-word;white-space:pre-wrap;}
+  .msg .meta{
+    display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    margin-top:7px;font-size:.76rem;color:#a8b0bd;letter-spacing:.05em;
+  }
+  .msg .del{
+    border:none;background:none;cursor:pointer;font-family:inherit;
+    font-size:.76rem;color:#c6a0a0;padding:0;transition:color .25s;
+  }
+  .msg .del:hover{color:#c0392b;text-decoration:underline;}
+
+  /* ---------- 页脚 ---------- */
+  footer{
+    text-align:center;margin-top:48px;color:var(--ink-soft);
+    font-size:.85rem;letter-spacing:.16em;
+  }
+  footer .heart{color:var(--gold);}
+
+  @media(max-width:560px){
+    .wrap{padding:34px 15px 60px;}
+    .card{padding:26px 20px;border-radius:16px;}
+    .quote{padding:18px 18px 18px 46px;}
+    .quote::before{left:14px;}
+    .hero .sub{letter-spacing:.2em;}
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="wrap">
+
+  <!-- ========== 封面 ========== -->
+  <header class="hero">
+    <div class="moon"></div>
+    <div class="sub">Le Petit Prince</div>
+    <h1>小王子</h1>
+    <div class="author">[法] 安托万·德·圣-埃克苏佩里 &nbsp;·&nbsp; 1943</div>
+  </header>
+
+  <!-- ========== 简介 ========== -->
+  <section class="card intro" style="animation-delay:.05s">
+    <h2 class="sec-title">书籍简介</h2>
+    <p>一位飞行员因飞机故障迫降在撒哈拉沙漠，遇见了来自 B612 小行星的神秘小男孩——小王子。小王子向飞行员讲述了他离开自己的星球、游历六颗小行星、最终来到地球的旅程。</p>
+    <p>他遇见了国王、爱慕虚荣的人、酒鬼、商人、点灯人和地理学家，看到了成人世界的荒诞与空虚；在地球上，他与狐狸相遇，懂得了"驯养"意味着建立羁绊，也明白了那朵独一无二的玫瑰为何珍贵。</p>
+    <p>这是一部写给大人的童话。它用最清澈的语言，讲述孤独、爱与责任——提醒每一个曾经是孩子的大人：真正重要的东西，用眼睛是看不见的。</p>
+
+    <dl class="info-grid">
+      <div><dt>书名</dt><dd>小王子</dd></div>
+      <div><dt>作者</dt><dd>圣-埃克苏佩里</dd></div>
+      <div><dt>首次出版</dt><dd>1943 年</dd></div>
+      <div><dt>类型</dt><dd>哲理童话 / 寓言</dd></div>
+    </dl>
+  </section>
+
+  <!-- ========== 经典语录 ========== -->
+  <section class="card" style="animation-delay:.12s">
+    <h2 class="sec-title">经典语录</h2>
+    <p class="tips">✦ 把鼠标移到任意一句话上，它会为你亮起来 <b>（交互 1）</b></p>
+
+    <div class="quote">
+      <p>真正重要的东西，用眼睛是看不见的，只有用心才能看得清。</p>
+      <span class="from">—— 狐狸对小王子说</span>
+    </div>
+
+    <div class="quote">
+      <p>你在你的玫瑰花身上耗费的时间，使得你的玫瑰花变得如此重要。</p>
+      <span class="from">—— 关于爱与责任</span>
+    </div>
+
+    <div class="quote">
+      <p>所有的大人都曾经是小孩，虽然，只有少数人记得。</p>
+      <span class="from">—— 献词</span>
+    </div>
+
+    <div class="quote">
+      <p>如果你说你在下午四点来，从三点钟开始，我就开始感觉很快乐。</p>
+      <span class="from">—— 狐狸谈期待</span>
+    </div>
+
+    <div class="quote">
+      <p>也许世界上也有五千朵和你一模一样的花，但只有你是我独一无二的玫瑰。</p>
+      <span class="from">—— 小王子</span>
+    </div>
+
+    <div class="quote">
+      <p>星星发亮是为了让每一个人有一天都能找到属于自己的星星。</p>
+      <span class="from">—— 关于孤独与希望</span>
+    </div>
+  </section>
+
+  <!-- ========== 留言板 ========== -->
+  <section class="card" style="animation-delay:.19s">
+    <h2 class="sec-title">留言板</h2>
+    <p class="tips">✦ 写下你想对小王子说的话吧 <b>（交互 2）</b></p>
+
+    <form class="board-form" id="form">
+      <textarea id="input" maxlength="200" placeholder="例如：如果可以，我也想遇见我的那朵玫瑰……"></textarea>
+      <div class="form-foot">
+        <span class="counter" id="counter">0 / 200</span>
+        <button class="btn" type="submit">提 交 留 言</button>
+      </div>
+    </form>
+
+    <div class="board-list" id="list">
+      <div class="board-empty" id="empty">还没有留言，来写下第一条吧 ✨</div>
+    </div>
+  </section>
+
+  <footer>只有用心才能看得清 <span class="heart">❤</span> Made with love</footer>
+
+</div>
+
+<script>
+/* ========== 星空装饰 ========== */
+(function(){
+  const box = document.getElementById('stars');
+  for(let i=0;i<44;i++){
+    const s = document.createElement('span');
+    const size = Math.random()*2.4 + 1;
+    s.style.width  = size + 'px';
+    s.style.height = size + 'px';
+    s.style.left = Math.random()*100 + 'vw';
+    s.style.top  = Math.random()*100 + 'vh';
+    s.style.animationDelay = (Math.random()*4).toFixed(2) + 's';
+    s.style.animationDuration = (3 + Math.random()*4).toFixed(2) + 's';
+    box.appendChild(s);
+  }
+})();
+
+/* ========== 交互 2：留言板 ========== */
+(function(){
+  const form    = document.getElementById('form');
+  const input   = document.getElementById('input');
+  const list    = document.getElementById('list');
+  const empty   = document.getElementById('empty');
+  const counter = document.getElementById('counter');
+
+  /* 字数统计 */
+  input.addEventListener('input', function(){
+    counter.textContent = input.value.length + ' / 200';
+  });
+
+  /* 转义，防止 XSS */
+  function esc(str){
+    return str.replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  /* 时间格式 */
+  function now(){
+    const d = new Date();
+    const p = n => String(n).padStart(2,'0');
+    return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+  }
+
+  /* 创建一条留言 DOM */
+  function createMsg(text, time){
+    const item = document.createElement('div');
+    item.className = 'msg';
+    item.innerHTML =
+      '<div class="txt"></div>' +
+      '<div class="meta">' +
+        '<span class="time"></span>' +
+        '<button class="del" type="button">删除</button>' +
+      '</div>';
+    item.querySelector('.txt').textContent  = text;
+    item.querySelector('.time').textContent = time;
+    item.querySelector('.del').addEventListener('click', function(){
+      item.style.transition = 'opacity .3s, transform .3s';
+      item.style.opacity = '0';
+      item.style.transform = 'translateX(20px)';
+      setTimeout(function(){
+        item.remove();
+        if(!list.querySelector('.msg')) empty.style.display = 'block';
+      }, 300);
+    });
+    return item;
+  }
+
+  /* 提交 */
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const text = input.value.trim();
+    if(!text){ input.focus(); return; }
+
+    if(empty) empty.style.display = 'none';
+
+    const item = createMsg(text, now());
+    list.appendChild(item);          // 新留言追加到末尾
+    item.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+    input.value = '';
+    counter.textContent = '0 / 200';
+    input.focus();
+  });
+
+  /* Ctrl / Cmd + Enter 快捷提交 */
+  input.addEventListener('keydown', function(e){
+    if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){
+      form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit',{cancelable:true}));
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
